@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
-
+from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 t0 = time.time()
 # put url of shoes
 url = 'https://www.farfetch.com/shopping/men/saint-laurent-classic-boat-shoes-item-14026957.aspx'
@@ -19,12 +19,12 @@ zip = "10001"
 city_address = "New York City"
 phone_num = "6083202928"
 email = "nyc111@gmail.com"
-state = "New York"
+state = "Alabam ba"
 CCnumber = "4072 0400 1020 0343"
 CCmonth = "09"
 CCyear = "20"
 CCcsv = "060"
-
+pw = "12333445"
 cart_url = 'https://www.farfetch.com/checkout/basket.aspx'
 
 profile = webdriver.FirefoxProfile()
@@ -35,9 +35,8 @@ profile.set_preference("permissions.default.image", 2)
 # profile.set_preference('permissions.default.stylesheet', 2)
 # disable flash
 profile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so', 'false')
-
 shoesize = 11
-browser = webdriver.Firefox(profile)
+browser = webdriver.Firefox(profile, executable_path='./geckodriver')
 
 print('Loading page...')
 
@@ -72,10 +71,11 @@ if len(browser.find_elements_by_id("GoToCheckoutAsGuest")) == 0:
         EC.presence_of_element_located((
             (By.XPATH, "(//div[@class='chooser'])[2]"))))
     browser.find_element_by_xpath("(//div[@class='chooser'])[2]").click()
-    stateB = browser.find_element_by_xpath("//li[@class='chooser-item'][contains(., state)]")
-    print(stateB.text)
-    ActionChains(browser).move_to_element(stateB)
-    stateB.click()
+    time.sleep(3)
+    # stateB = browser.find_element_by_xpath("//li[@class='chooser-item'][@data-item-index='2']")
+    # print(stateB.text)
+    # ActionChains(browser).move_to_element(stateB)
+    # stateB.click()
 
 else: # popup
     browser.find_element_by_id("GoToCheckoutAsGuest").click()
@@ -100,14 +100,12 @@ browser.find_element_by_id("PostalCode").send_keys(zip)
 browser.find_element_by_id("AdministrativeArea").send_keys(city_address)
 browser.find_element_by_xpath("/html/body/div[2]/main/section/div/div/div[1]/div[2]/div/section/div[1]/div/div/div/form/div[1]/div/div[6]/div[2]/div").click()
 
-phone = browser.find_element_by_id("billHomePhone")
-phone.send_keys(phone_num)
-email = browser.find_element_by_id("billEmailAddress")
-email.send_keys(email)
-
+browser.find_element_by_id("Phone").send_keys(phone_num)
+browser.find_element_by_id("password").send_keys(pw)
+browser.find_element_by_id("confirmPassword").send_keys(pw)
 print('Successful!')
 print('Skipping delivery options')
-next_step = browser.find_element_by_id("billPaneContinue")
+next_step = browser.find_element_by_id("tstid_PlaceOrderLabel").click()
 
 print('Button clicked')
 
